@@ -70,6 +70,7 @@ namespace sfte {
 		inline tileIDType tile(sf::Vector3u position);
 		inline TileProperty getTileProperties(sf::Vector3u position);
 		inline sf::Vector3u getTilemapSize();
+		inline sf::Vector3u getTilemapLimits();
 		inline sf::Vector2u getTileSize();
 
 		// Rendering
@@ -170,6 +171,10 @@ namespace sfte {
 
 		template< typename tileIDType > inline sf::Vector3u World< tileIDType >::getTilemapSize() {
 			return tilemapSize; // Return tilemap size.
+		}
+
+		template< typename tileIDType > inline sf::Vector3u World< tileIDType >::getTilemapLimits() {
+			return tilemapLimits; // Return tilemap limits.
 		}
 
 		template< typename tileIDType > inline sf::Vector2u World< tileIDType >::getTileSize() {

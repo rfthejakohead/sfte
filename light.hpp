@@ -21,6 +21,7 @@ namespace sfte {
 	public:
 		sf::Vector2u castRay(int x1, int y1, int x2, int y2, bool keepGoing = false);
 		void render(sf::Vector2f tlScreenPoint, sf::Vector2f brScreenPoint);
+		void renderLight(sf::Vector2f position, float radius);
 
 		LightMap(World < worldTileIDType >* world);
 	};
@@ -126,6 +127,61 @@ namespace sfte {
 			}
 			return sf::Vector2u(x, y);
 		}
+
+		template< class worldTileIDType, typename IDType > void LightMap< worldTileIDType, IDType >::renderLight(sf::Vector2f position, float radius) {
+			std::vector < sf::Vector2u > points; // Vector to store collision points for later ordering
+
+	        sf::Vector2u tilesize(targetWorld->getTileSize());
+	        sf::Vector3u worldbound(targetWorld->getTilemapLimits());
+	        float x1 = (position.x - radius) / tilesize.x,
+	        	  y1 = (position.y - radius) / tilesize.y,
+	        	  x2 = (position.x + radius) / tilesize.x,
+	        	  y2 = (position.y + radius) / tilesize.y;
+
+	        if(x1 < 0)
+	        	x1 = 0;
+	        else if(x1 > worldbound.x)
+	        	x1 = worldbound.x;
+	        if(y1 < 0)
+	        	y1 = 0;
+	        else if(y1 > worldbound.y)
+	        	y1 = worldbound.y;
+	        if(x2 < 0)
+	        	x2 = 0;
+	        else if(x2 > worldbound.x)
+	        	x2 = worldbound.x;
+	        if(y2 < 0)
+	        	y2 = 0;
+	        else if(y2 > worldbound.y)
+	        	y2 = worldbound.y;
+
+			// Add screen corner points
+	        points.push_back(castRay(position.x, position.y, x1 * tilesize.x, y1 * tilesize.y));
+	        points.push_back(castRay(position.x, position.y, (x2 + 1) * tilesize.x, y1 * tilesize.y));
+	        points.push_back(castRay(position.x, position.y, (x2 + 1) * tilesize.x, (y2 + 1) * tilesize.y));
+	        points.push_back(castRay(position.x, position.y, x1 * tilesize.x, (y2 + 1) * tilesize.y));
+
+	        for(size_t x = x1; x <= x2; ++x) {
+	        	for(size_t y = y1; y <= y2; ++y) {
+		        	if(targetWorld->getTileProperties(sf::Vector3u(x, y, 0)).render) {
+		        		points.push_back(castRay(position.x, position.y, x * tilesize.x - 1, y * tilesize.y - 1));
+		        		points.push_back(castRay(position.x, position.y, x * tilesize.x + 1, y * tilesize.y - 1));
+		        		points.push_back(castRay(position.x, position.y, x * tilesize.x + 1, y * tilesize.y + 1));
+		        		points.push_back(castRay(position.x, position.y, x * tilesize.x - 1, y * tilesize.y + 1));
+		        	}
+		        }
+	        }
+
+	        std::sort(points.begin(), points.end(), [](sf::Vector2u a, sf::Vector2u b) { return atan2(a.y, a.x) < atan2(b.y, b.x); });
+
+	        sf::VertexArray va(sf::TrianglesFan);
+	        va.append(sf::Vertex(position));
+	        for(size_t n = 0; n < points.size(); ++n)
+	            va.append(sf::Vertex(sf::Vector2f(points[n].x, points[n].y)));
+	        va.append(sf::Vertex(sf::Vector2f(points[0].x, points[0].y)));
+
+	        targetWorld->getRenderTarget()->draw(va);
+	    }
 }
 
 #endif
