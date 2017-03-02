@@ -172,7 +172,10 @@ namespace sfte {
 		        }
 	        }
 
-	        std::sort(points.begin(), points.end(), [](sf::Vector2u a, sf::Vector2u b) { return atan2(a.y, a.x) < atan2(b.y, b.x); });
+	        std::cout << "Initial size: " << points.size();
+	        points.erase(std::unique(points.begin(), points.end()), points.end()); // Remove duplicates to avoid problems (faster than using a set)
+	        std::cout << "; Reduced size: " << points.size() << std::endl;
+	        std::sort(points.begin(), points.end(), [&position](sf::Vector2u a, sf::Vector2u b) { return atan2(a.y - position.y, a.x - position.x) < atan2(b.y - position.y, b.x - position.x); });
 
 	        sf::VertexArray va(sf::TrianglesFan);
 	        va.append(sf::Vertex(position));
