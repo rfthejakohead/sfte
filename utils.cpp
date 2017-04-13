@@ -222,30 +222,3 @@ namespace sfte {
 			restoreCout();
 		}
 }
-
-// Format loaders implementation
-/* sfteBoxes file format:
-	Each bounding box is a float rect (4 floats, 2 of offset & 2 of size).
-	Floats are ranges from 0 to 1. For example, the middle is 0.5.
-	Actual file format:
-	x,y,w,h;x,y,w,h;x,y,w,h	<- Each semicolon represents the next bitmask variant of the tile. E.g.: The first part separated by semicolon represents a fully connected tile (0 bitmask).
-	x,y,w,h					<- A new line represents the next tile ID. E.g.: Line 5 represents tileID 4 (n-1, because c++ indexes start at 0, not 1).
-	x,y,w,h,x,y,w,h			<- Commas represent the next value (shown by the letter). They can be serialised to have multiple boxes in one tile for complex tiles.
-
-	This leads to:
-	{{fR(x, y, w, h)}, {fR(x, y, w, h)}, {fR(x, y, w, h)}}, {{fR(x, y, w, h)}}, {{fR(x, y, w, h), fR(x, y, w, h)}}
-	... where fR is a sf::FloatRect and {} are levels in vec<vec<vec<fR>>> parsed
-*/
-std::vector < std::vector < std::vector < sf::FloatRect > > > sfte::loadBoxesFromFile(std::string path) {
-	std::ifstream ifs; // File stream
-	ifs.open(path, std::ifstream::in | std::ifstream::binary); // Open file
-	std::string content(std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>()); // Read whole content to string named... you guessed it... content
-	std::vector < std::vector < std::vector < sf::FloatRect > > > parsed; // Parsed result to be returned
-
-	unsigned char curVal = 0;
-	//for(size_t i = 0, )
-}
-
-std::vector < std::vector < std::vector < sf::Vector2f > > > sfte::loadCornersFromFile(std::string path) {
-
-}

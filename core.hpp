@@ -1,5 +1,6 @@
 #ifndef SFTE_CORE_HPP
 #define SFTE_CORE_HPP
+#define _USE_MATH_DEFINES
 
 #include <SFML/Graphics.hpp>
 #include <vector>

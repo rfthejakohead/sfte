@@ -73,9 +73,6 @@ namespace sfte {
 		Console(sf::RenderTarget* whereToDraw, sf::Texture* fontTexture, sf::Vector2u characterBounds, sf::Vector2f fontSize, size_t maxLines = 0, size_t maxColumns = 0, sf::Color color = sf::Color::White, bool shadowing = false, sf::Vector2f shadowOffset = sf::Vector2f(1.0f, 1.0f), float shadowFactor = 1.0f);
 		~Console();
 	};
-
-	std::vector < std::vector < std::vector < sf::FloatRect > > > loadBoxesFromFile(std::string path); // Format loaders. Returns content, exception thrown for failure.
-    std::vector < std::vector < std::vector < sf::Vector2f > > > loadCornersFromFile(std::string path);
 }
 
 #endif

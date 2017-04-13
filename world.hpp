@@ -69,6 +69,7 @@ namespace sfte {
 		inline void		  tile(sf::Vector3u position, tileIDType ID);
 		inline tileIDType tile(sf::Vector3u position);
 		inline TileProperty getTileProperties(sf::Vector3u position);
+		inline unsigned char getTileBitmask(sf::Vector3u position);
 		inline sf::Vector3u getTilemapSize();
 		inline sf::Vector3u getTilemapLimits();
 		inline sf::Vector2u getTileSize();
@@ -167,6 +168,10 @@ namespace sfte {
 
 		template< typename tileIDType > inline TileProperty World< tileIDType >::getTileProperties(sf::Vector3u position) {
 			return tileProperties->at(tilemap[position.x][position.y][position.z]); // Return tile properties of requested position.
+		}
+
+		template< typename tileIDType > inline unsigned char World< tileIDType >::getTileBitmask(sf::Vector3u position) {
+			return bitmask[position.x][position.y][position.z]; // Return tile bitmask of requested position.
 		}
 
 		template< typename tileIDType > inline sf::Vector3u World< tileIDType >::getTilemapSize() {
